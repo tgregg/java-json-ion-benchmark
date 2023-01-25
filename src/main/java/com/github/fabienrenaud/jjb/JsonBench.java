@@ -134,4 +134,8 @@ public abstract class JsonBench {
     public Object ionjava() throws Exception {
         return null;
     }
+
+    public Object jackson_ion() throws Exception {
+        return null;
+    }
 }

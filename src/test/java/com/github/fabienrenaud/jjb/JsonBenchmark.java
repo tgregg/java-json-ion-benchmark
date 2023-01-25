@@ -43,10 +43,8 @@ public abstract class JsonBenchmark<T> {
         } else if (o instanceof com.grack.nanojson.JsonObject) {
             String v = com.grack.nanojson.JsonWriter.string(o);
             testString(v);
-        } else if (lib == Library.IONJAVA) {
-            try (IonReader reader = IonReaderBuilder.standard().build(((ByteArrayOutputStream) o).toByteArray())) {
-                testPojo((T) BENCH.JSON_SOURCE().streamDeserializer().ionjava(reader));
-            }
+        } else if (lib == Library.IONJAVA || lib == Library.JACKSON_ION) {
+            testPojo((T) BENCH.JSON_SOURCE().provider().jackson_ion().readValue(((ByteArrayOutputStream) o).toByteArray(), pojoType()));
         } else {
             testString(o.toString());
         }
@@ -283,6 +281,13 @@ public abstract class JsonBenchmark<T> {
     public void ionjava() throws Exception {
         for (int i = 0; i < ITERATIONS; i++) {
             test(Library.IONJAVA, BENCH.ionjava());
+        }
+    }
+
+    @Test
+    public void jackson_ion() throws Exception {
+        for (int i = 0; i < ITERATIONS; i++) {
+            test(Library.JACKSON_ION, BENCH.jackson_ion());
         }
     }
 }

@@ -57,4 +57,6 @@ public interface JsonProvider<T> {
     io.avaje.jsonb.JsonType<T> avajeJsonb_default();
 
     QsonMapper qson();
+
+    ObjectMapper jackson_ion();
 }

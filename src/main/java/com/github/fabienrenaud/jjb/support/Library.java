@@ -34,7 +34,8 @@ public enum Library {
     QSON,
     UNDERSCORE_JAVA,
     PUREJSON,
-    IONJAVA;
+    IONJAVA,
+    JACKSON_ION;
 
     public static Set<Library> fromCsv(String str) {
         if (str == null || str.trim().isEmpty()) {
