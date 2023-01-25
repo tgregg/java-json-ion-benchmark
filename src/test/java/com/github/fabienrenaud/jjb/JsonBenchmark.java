@@ -1,5 +1,7 @@
 package com.github.fabienrenaud.jjb;
 
+import com.amazon.ion.IonReader;
+import com.amazon.ion.system.IonReaderBuilder;
 import com.github.fabienrenaud.jjb.model.Clients;
 import com.github.fabienrenaud.jjb.model.Users;
 import com.github.fabienrenaud.jjb.support.Api;
@@ -7,6 +9,7 @@ import com.github.fabienrenaud.jjb.support.BenchSupport;
 import com.github.fabienrenaud.jjb.support.Library;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.assertFalse;
@@ -26,7 +29,7 @@ public abstract class JsonBenchmark<T> {
 
     private static final int ITERATIONS = 3;
 
-    protected void test(Library lib, Object o) {
+    protected void test(Library lib, Object o) throws Exception {
         if (o == null) { // means it shouldn't be supported.
             assertFalse("Library '" + lib + "' for api '" + BENCH_API + " returned null", supports(lib));
             return;
@@ -40,6 +43,10 @@ public abstract class JsonBenchmark<T> {
         } else if (o instanceof com.grack.nanojson.JsonObject) {
             String v = com.grack.nanojson.JsonWriter.string(o);
             testString(v);
+        } else if (lib == Library.IONJAVA) {
+            try (IonReader reader = IonReaderBuilder.standard().build(((ByteArrayOutputStream) o).toByteArray())) {
+                testPojo((T) BENCH.JSON_SOURCE().streamDeserializer().ionjava(reader));
+            }
         } else {
             testString(o.toString());
         }
@@ -269,6 +276,13 @@ public abstract class JsonBenchmark<T> {
     public void qson() throws Exception {
         for (int i = 0; i < ITERATIONS; i++) {
             test(Library.QSON, BENCH.qson());
+        }
+    }
+
+    @Test
+    public void ionjava() throws Exception {
+        for (int i = 0; i < ITERATIONS; i++) {
+            test(Library.IONJAVA, BENCH.ionjava());
         }
     }
 }

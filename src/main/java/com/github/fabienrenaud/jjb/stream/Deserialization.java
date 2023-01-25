@@ -16,6 +16,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openjdk.jmh.annotations.Benchmark;
 
+import com.amazon.ion.IonReader;
+import com.amazon.ion.system.IonReaderBuilder;
 import com.fasterxml.jackson.core.JsonParser;
 import com.github.fabienrenaud.jjb.JsonBench;
 import com.github.fabienrenaud.jjb.data.JsonSource;
@@ -381,6 +383,14 @@ public class Deserialization extends JsonBench {
                 }
             }));
             return user;
+        }
+    }
+
+    @Benchmark
+    @Override
+    public Object ionjava() throws Exception {
+        try (IonReader reader = IonReaderBuilder.standard().build(JSON_SOURCE().nextInputStream())) {
+            return JSON_SOURCE().streamDeserializer().ionjava(reader);
         }
     }
 }

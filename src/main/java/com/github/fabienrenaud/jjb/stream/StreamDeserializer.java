@@ -1,5 +1,6 @@
 package com.github.fabienrenaud.jjb.stream;
 
+import com.amazon.ion.IonReader;
 import com.fasterxml.jackson.core.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.owlike.genson.stream.ObjectReader;
@@ -20,4 +21,6 @@ public interface StreamDeserializer<T> {
     T moshi(com.squareup.moshi.JsonReader reader) throws IOException;
 
     T underscore_java(String reader) throws IOException;
+
+    T ionjava(IonReader reader);
 }

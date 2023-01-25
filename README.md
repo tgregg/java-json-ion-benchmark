@@ -31,6 +31,7 @@ It covers the following libraries:
 * [underscore-java](https://github.com/javadev/underscore-java)
 * [purejson](https://senthilganeshs.github.io/jsonp/)
 * [qson](https://github.com/quarkusio/qson)
+* [ion-java (Ion)](https://github.com/amazon-ion/ion-java)
 
 When available, both databinding and 'stream' (custom packing and unpacking) implementations are tested.
 Two different kinds of [models](/src/main/java/com/github/fabienrenaud/jjb/model/) are evaluated with payloads of 1, 10, 100 and 1000 KB size:
@@ -77,6 +78,7 @@ The results here-below were computed on November the 27th, 2021 with the followi
 | underscore   | 1.71     | 
 | purejson     | 1.0.1    |
 | yasson       | 1.0.9    |
+| ion-java     | 1.9.5    |
 
 [All graphs and sheets are available in this google doc.][spreadsheet]
 

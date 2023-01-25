@@ -130,4 +130,8 @@ public abstract class JsonBench {
     public Object qson() throws Exception {
         return null;
     }
+
+    public Object ionjava() throws Exception {
+        return null;
+    }
 }

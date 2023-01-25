@@ -6,6 +6,8 @@ import java.io.Writer;
 
 import org.openjdk.jmh.annotations.Benchmark;
 
+import com.amazon.ion.IonWriter;
+import com.amazon.ion.system.IonTextWriterBuilder;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.github.fabienrenaud.jjb.JsonBench;
 import com.github.fabienrenaud.jjb.JsonUtils;
@@ -164,5 +166,15 @@ public class Serialization extends JsonBench {
     public Object purejson() throws Exception {
         Value purejson = JSON_SOURCE().streamSerializer().purejson(JSON_SOURCE().nextPojo());
         return Generator.create().generate(purejson);
+    }
+
+    @Benchmark
+    @Override
+    public Object ionjava() throws Exception {
+        ByteArrayOutputStream baos = JsonUtils.byteArrayOutputStream();
+        try (IonWriter writer = IonTextWriterBuilder.standard().build(baos)) {
+            JSON_SOURCE().streamSerializer().ionjava(writer, JSON_SOURCE().nextPojo());
+        }
+        return baos;
     }
 }
