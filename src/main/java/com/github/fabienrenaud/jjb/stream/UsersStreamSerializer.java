@@ -1,5 +1,7 @@
 package com.github.fabienrenaud.jjb.stream;
 
+import com.amazon.ion.IonType;
+import com.amazon.ion.IonWriter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.github.fabienrenaud.jjb.model.Users;
 import com.github.fabienrenaud.jjb.model.Users.Friend;
@@ -1233,5 +1235,150 @@ public class UsersStreamSerializer implements StreamSerializer<Users> {
             map.put(Value.string("favoriteFruit"), Value.string(u.getFavoriteFruit()));
         }
         return Parser.Value.json(map);
+    }
+
+    @Override
+    public void ionjava(IonWriter writer, Users obj) throws IOException {
+        writer.stepIn(IonType.STRUCT);
+
+        if (obj.getUsers() != null) {
+            writer.setFieldName("users");
+            writer.stepIn(IonType.LIST);
+            for (User user : obj.getUsers()) {
+                ionjavaUser(writer, user);
+            }
+            writer.stepOut();
+        }
+
+        writer.stepOut();
+    }
+
+    private void ionjavaUser(IonWriter writer, User user) throws IOException {
+        writer.stepIn(IonType.STRUCT);
+
+        if (user.getId() != null) {
+            writer.setFieldName("id");
+            writer.writeString(user.getId());
+        }
+        writer.setFieldName("index");
+        writer.writeInt(user.getIndex());
+
+        if (user.getGuid() != null) {
+            writer.setFieldName("guid");
+            writer.writeString(user.getGuid());
+        }
+
+        writer.setFieldName("isActive");
+        writer.writeBool(user.getIsActive());
+
+        if (user.getBalance() != null) {
+            writer.setFieldName("balance");
+            writer.writeString(user.getBalance());
+        }
+
+        if (user.getPicture() != null) {
+            writer.setFieldName("picture");
+            writer.writeString(user.getPicture());
+        }
+
+        writer.setFieldName("age");
+        writer.writeInt(user.getAge());
+
+        if (user.getEyeColor() != null) {
+            writer.setFieldName("eyeColor");
+            writer.writeSymbol(user.getEyeColor());
+        }
+
+        if (user.getName() != null) {
+            writer.setFieldName("name");
+            writer.writeString(user.getName());
+        }
+
+        if (user.getGender() != null) {
+            writer.setFieldName("gender");
+            writer.writeSymbol(user.getGender());
+        }
+
+        if (user.getCompany() != null) {
+            writer.setFieldName("company");
+            writer.writeString(user.getCompany());
+        }
+
+        if (user.getEmail() != null) {
+            writer.setFieldName("email");
+            writer.writeString(user.getEmail());
+        }
+
+        if (user.getPhone() != null) {
+            writer.setFieldName("phone");
+            writer.writeString(user.getPhone());
+        }
+
+        if (user.getAddress() != null) {
+            writer.setFieldName("address");
+            writer.writeString(user.getAddress());
+        }
+
+        if (user.getAbout() != null) {
+            writer.setFieldName("about");
+            writer.writeString(user.getAbout());
+        }
+
+        if (user.getRegistered() != null) {
+            writer.setFieldName("registered");
+            writer.writeString(user.getRegistered());
+        }
+
+        writer.setFieldName("latitude");
+        writer.writeFloat(user.getLatitude());
+
+        writer.setFieldName("longitude");
+        writer.writeFloat(user.getLongitude());
+
+        if (user.getTags() != null) {
+            writer.setFieldName("tags");
+            writer.stepIn(IonType.LIST);
+            for (String tag : user.getTags()) {
+                writer.writeString(tag);
+            }
+            writer.stepOut();
+        }
+
+        if (user.getFriends() != null) {
+            writer.setFieldName("friends");
+            writer.stepIn(IonType.LIST);
+            for (Friend friend : user.getFriends()) {
+                ionjavaFriend(writer, friend);
+            }
+            writer.stepOut();
+        }
+
+        if (user.getGreeting() != null) {
+            writer.setFieldName("greeting");
+            writer.writeString(user.getGreeting());
+        }
+
+        if (user.getFavoriteFruit() != null) {
+            writer.setFieldName("favoriteFruit");
+            writer.writeString(user.getFavoriteFruit());
+        }
+
+        writer.stepOut();
+    }
+
+    private static void ionjavaFriend(IonWriter writer, Friend friend) throws IOException {
+        writer.stepIn(IonType.STRUCT);
+
+        if (friend.getId() != null) {
+            writer.setFieldName("id");
+            writer.writeString(friend.getId());
+        }
+
+        if (friend.getName() != null) {
+            writer.setFieldName("name");
+            writer.writeString(friend.getName());
+        }
+
+        writer.stepOut();
     }
 }

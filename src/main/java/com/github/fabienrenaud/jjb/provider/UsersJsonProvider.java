@@ -6,6 +6,7 @@ import com.dslplatform.json.DslJson;
 import com.dslplatform.json.runtime.Settings;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.ion.IonObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.fasterxml.jackson.module.blackbird.BlackbirdModule;
 import com.github.fabienrenaud.jjb.model.Users;
@@ -47,6 +48,8 @@ public class UsersJsonProvider implements JsonProvider<Users> {
     private final org.apache.johnzon.mapper.Mapper johnzon;
     private final com.squareup.moshi.JsonAdapter<Users> moshi = new Moshi.Builder().build().adapter(Users.class);
     private final QsonMapper qson = new QsonMapper();
+    private final ObjectMapper jacksonIon = new IonObjectMapper()
+        .registerModule(new BlackbirdModule());
 
     /*
      * DSL-json
@@ -174,6 +177,11 @@ public class UsersJsonProvider implements JsonProvider<Users> {
     @Override
     public QsonMapper qson() {
         return qson;
+    }
+
+    @Override
+    public ObjectMapper jackson_ion() {
+        return jacksonIon;
     }
 
     private static final ThreadLocal<jodd.json.JsonParser> JODD_DESER = ThreadLocal.withInitial(jodd.json.JsonParser::new);

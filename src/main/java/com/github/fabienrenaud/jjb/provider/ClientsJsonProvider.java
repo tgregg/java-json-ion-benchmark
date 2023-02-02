@@ -7,6 +7,7 @@ import com.dslplatform.json.runtime.Settings;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.ion.IonObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.fasterxml.jackson.module.blackbird.BlackbirdModule;
@@ -147,6 +148,11 @@ public class ClientsJsonProvider implements JsonProvider<Clients> {
 
     private final QsonMapper qson = new QsonMapper();
 
+    private final ObjectMapper jacksonIon = new IonObjectMapper()
+        .registerModule(new BlackbirdModule())
+        .registerModule(new JavaTimeModule())
+        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
     /*
      * DSL-json
      */
@@ -282,6 +288,11 @@ public class ClientsJsonProvider implements JsonProvider<Clients> {
     @Override
     public QsonMapper qson() {
         return qson;
+    }
+
+    @Override
+    public ObjectMapper jackson_ion() {
+        return jacksonIon;
     }
 
     private static final ThreadLocal<JSONSerializer> FLEXJSON_SER = ThreadLocal.withInitial(() -> new JSONSerializer()

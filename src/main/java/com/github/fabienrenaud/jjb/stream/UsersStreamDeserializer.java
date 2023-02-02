@@ -1,5 +1,6 @@
 package com.github.fabienrenaud.jjb.stream;
 
+import com.amazon.ion.IonReader;
 import com.fasterxml.jackson.core.JsonParser;
 import com.github.fabienrenaud.jjb.model.Users;
 import com.github.fabienrenaud.jjb.model.Users.Friend;
@@ -809,5 +810,144 @@ public class UsersStreamDeserializer implements StreamDeserializer<Users> {
         }
 
         return u;
+    }
+
+    @Override
+    public Users ionjava(IonReader reader) {
+        Users users = new Users();
+
+        reader.next();
+        reader.stepIn();
+
+        while (reader.next() != null) {
+            if ("users".equals(reader.getFieldName())) {
+                users.setUsers(new ArrayList<>());
+                reader.stepIn();
+                while (reader.next() != null) {
+                    users.getUsers().add(ionjavaUser(reader));
+                }
+                reader.stepOut();
+            }
+        }
+
+        reader.stepOut();
+
+        return users;
+    }
+
+    private static User ionjavaUser(IonReader reader) {
+        User user = new User();
+
+        reader.stepIn();
+
+        while (reader.next() != null) {
+            switch (reader.getFieldName()) {
+                case "id":
+                    user.setId(reader.stringValue());
+                    break;
+                case "index":
+                    user.setIndex(reader.intValue());
+                    break;
+                case "guid":
+                    user.setGuid(reader.stringValue());
+                    break;
+                case "isActive":
+                    user.setIsActive(reader.booleanValue());
+                    break;
+                case "balance":
+                    user.setBalance(reader.stringValue());
+                    break;
+                case "picture":
+                    user.setPicture(reader.stringValue());
+                    break;
+                case "age":
+                    user.setAge(reader.intValue());
+                    break;
+                case "eyeColor":
+                    user.setEyeColor(reader.stringValue());
+                    break;
+                case "name":
+                    user.setName(reader.stringValue());
+                    break;
+                case "gender":
+                    user.setGender(reader.stringValue());
+                    break;
+                case "company":
+                    user.setCompany(reader.stringValue());
+                    break;
+                case "email":
+                    user.setEmail(reader.stringValue());
+                    break;
+                case "phone":
+                    user.setPhone(reader.stringValue());
+                    break;
+                case "address":
+                    user.setAddress(reader.stringValue());
+                    break;
+                case "about":
+                    user.setAbout(reader.stringValue());
+                    break;
+                case "registered":
+                    user.setRegistered(reader.stringValue());
+                    break;
+                case "latitude":
+                    user.setLatitude(reader.doubleValue());
+                    break;
+                case "longitude":
+                    user.setLongitude(reader.doubleValue());
+                    break;
+                case "tags":
+                    user.setTags(new ArrayList<>());
+                    reader.stepIn();
+                    while (reader.next() != null) {
+                        user.getTags().add(reader.stringValue());
+                    }
+                    reader.stepOut();
+                    break;
+                case "friends":
+                    user.setFriends(new ArrayList<>());
+                    reader.stepIn();
+                    while (reader.next() != null) {
+                        user.getFriends().add(ionjavaFriend(reader));
+                    }
+                    reader.stepOut();
+                    break;
+                case "greeting":
+                    user.setGreeting(reader.stringValue());
+                    break;
+                case "favoriteFruit":
+                    user.setFavoriteFruit(reader.stringValue());
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        reader.stepOut();
+
+        return user;
+    }
+
+    private static Friend ionjavaFriend(IonReader reader) {
+        Friend friend = new Friend();
+
+        reader.stepIn();
+
+        while (reader.next() != null) {
+            switch (reader.getFieldName()) {
+                case "id":
+                    friend.setId(reader.stringValue());
+                    break;
+                case "name":
+                    friend.setName(reader.stringValue());
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        reader.stepOut();
+
+        return friend;
     }
 }

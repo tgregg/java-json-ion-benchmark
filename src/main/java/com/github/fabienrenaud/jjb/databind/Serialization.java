@@ -177,4 +177,12 @@ public class Serialization extends JsonBench {
         JSON_SOURCE().provider().qson().writeStream(JSON_SOURCE().nextPojo(), baos);
         return baos;
     }
+
+    @Benchmark
+    @Override
+    public Object jackson_ion() throws Exception {
+        ByteArrayOutputStream baos = JsonUtils.byteArrayOutputStream();
+        JSON_SOURCE().provider().jackson_ion().writeValue(baos, JSON_SOURCE().nextPojo());
+        return baos;
+    }
 }
